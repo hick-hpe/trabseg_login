@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trocar Senha</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed);
+}
+
+.container{
+    width:400px;
+    background:#fff;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 20px 40px rgba(0,0,0,.2);
+    animation:fade .8s;
+}
+
+.icon{
+    width:90px;
+    height:90px;
+    margin:0 auto 20px;
+    background:#2563eb;
+    color:#fff;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:42px;
+}
+
+h2{
+    text-align:center;
+    color:#222;
+    margin-bottom:8px;
+}
+
+p{
+    text-align:center;
+    color:#666;
+    margin-bottom:30px;
+}
+
+.input-group{
+    margin-bottom:18px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+    color:#444;
+}
+
+.input-group input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:15px;
+    transition:.3s;
+}
+
+.input-group input:focus{
+    outline:none;
+    border-color:#2563eb;
+    box-shadow:0 0 8px rgba(37,99,235,.25);
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+.back{
+    display:block;
+    text-align:center;
+    margin-top:20px;
+    text-decoration:none;
+    color:#2563eb;
+    font-weight:bold;
+}
+
+.back:hover{
+    text-decoration:underline;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@media(max-width:450px){
+    .container{
+        width:90%;
+        padding:30px;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="icon">🔒</div>
+
+    <h2>Trocar Senha</h2>
+    <p>Informe seu usuário e escolha uma nova senha.</p>
+
+    <form action="/trocar-senha" method="post">
+
+        <div class="input-group">
+            <label>Usuário</label>
+            <input
+                type="text"
+                name="usuario"
+                placeholder="Digite seu usuário"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label>Nova Senha</label>
+            <input
+                type="password"
+                name="senha"
+                placeholder="Digite a nova senha"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label>Confirmar Senha</label>
+            <input
+                type="password"
+                name="confirmar_senha"
+                placeholder="Confirme a nova senha"
+                required
+            >
+        </div>
+
+        {{ erro_login }}
+
+        <button type="submit">
+            🔑 Alterar Senha
+        </button>
+
+    </form>
+
+    <a class="back" href="login.html">
+        ← Voltar para o Login
+    </a>
+
+</div>
+
+</body>
+</html>

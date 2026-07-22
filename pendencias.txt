@@ -1,0 +1,7 @@
+- novo usuario
+- pkdf2
+- armazenar senha
+- alterar senha
+
+
+- esquecer senha
