@@ -2,8 +2,6 @@ from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from fastapi import status
-import hashlib
-import os
 import services
 import random
 
@@ -12,6 +10,8 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 codigo_rec = None
+
+usuario_logado = None
 
 banco_dados_senhas = {
     "homer": ""
@@ -29,8 +29,12 @@ def login(
     request: Request,
     usuario: str = Form(...),
     senha: str = Form(...)
-):
+):  
+    global usuario_logado
+    
+    usuario_logado = None
     salt = None
+    
     if banco_dados_senhas[usuario]:
         salt_hex = banco_dados_senhas[usuario].split("$")[2]
         salt = bytes.fromhex(salt_hex)
@@ -53,10 +57,12 @@ def login(
 
 @app.get('/trocar-senha')
 def trocar_senha(request: Request):
-
+    global usuario_logado
+    
     return templates.TemplateResponse(
         request=request,
-        name="trocar_senha.html"
+        name="trocar-senha.html",
+        context={"usuario": usuario_logado or ""}
     )
 
 @app.post('/trocar-senha')
@@ -76,30 +82,34 @@ def troca_senha_post(
         else:
             return templates.TemplateResponse(
                         request=request,
-                        name="trocar_senha.html",
+                        name="trocar-senha.html",
                         context={"erro_login":"Senhas Diferentes!"}
                         )
     else:
         return templates.TemplateResponse(
             request=request,
-            name="trocar_senha.html",
+            name="trocar-senha.html",
             context={"erro_login":"Usuario não existe!!!"}
             )
+        
 @app.get('/esqueci-senha')
 def esqueci_senha(request: Request):
         return templates.TemplateResponse(
         request=request,
         name="esqueci-senha.html"
     )
+        
 @app.post('/esqueci-senha')
 def esqueci_senha_post(
     request: Request,
     usuario: str = Form(...)
 ):
-    global codigo_rec
+    global codigo_rec, usuario_logado
+    
     if(usuario in banco_dados_senhas):
-        codigo_rec = f'{random.randint(0,999999)}'
+        codigo_rec = f'{random.randint(111111,999999)}'
         print(codigo_rec)
+        usuario_logado = usuario
         return RedirectResponse(url="/valida-codigo", status_code=status.HTTP_303_SEE_OTHER)
     else:
          return templates.TemplateResponse(
@@ -113,8 +123,11 @@ def valida_codigo(request: Request):
 
     return templates.TemplateResponse(
         request=request,
-        name="valida-codigo.html"
+        name="valida-codigo.html",
+        context={"usuario": usuario_logado}
     )
+    
+    
 @app.post('/valida-codigo')
 def valida_codigo_post(
     request: Request,

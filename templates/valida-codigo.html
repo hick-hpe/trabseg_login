@@ -66,14 +66,29 @@
     <h2>Validar código</h2>
 
     <form action="/valida-codigo" method="post">
+        <div>
+            <label for="usuario">Nome de Usuário</label>
+            <input
+                type="text"
+                id="usuario"
+                name="usuario"
+                placeholder="Digite seu nome de usuário"
+                required
+                value="{{ usuario }}"
+                readonly
+            >
+        </div>
+
+        <div>
         <label for="codigo">Código</label>
-        <input
-            type="text"
-            id="codigo"
-            name="codigo"
-            placeholder="Digite o codigo"
-            required
-        >
+            <input
+                type="text"
+                id="codigo"
+                name="codigo"
+                placeholder="Digite o codigo"
+                required
+            >
+        </div>
         {{erro_login}}
         <button type="submit">Enviar</button>
     </form>

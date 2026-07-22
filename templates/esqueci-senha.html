@@ -66,14 +66,16 @@
     <h2>Esqueci Minha Senha</h2>
 
     <form action="/esqueci-senha" method="post">
-        <label for="usuario">Nome de Usuário</label>
-        <input
-            type="text"
-            id="usuario"
-            name="usuario"
-            placeholder="Digite seu nome de usuário"
-            required
-        >
+        <div>
+            <label for="usuario">Nome de Usuário</label>
+            <input
+                type="text"
+                id="usuario"
+                name="usuario"
+                placeholder="Digite seu nome de usuário"
+                required
+            >
+        </div>
         {{erro_login}}
         <button type="submit">Enviar</button>
     </form>
