@@ -6,11 +6,10 @@ def cript_senha(senha, salt_user=None):
        senha_b = senha.encode()
        algoritmo = 'sha256'
        iteracoes = 100_000
-       salt = bytes(16)    
-       salt = salt_user or salt
+       salt = salt_user or bytes(16)
 
        chave = hashlib.pbkdf2_hmac(algoritmo, senha_b, salt, iteracoes)
 
-       string_registro_banco = f"{algoritmo}${iteracoes}${salt.hex()}${chave.hex()}"
+       string_registro_banco = f"$pbkdf2${algoritmo}${iteracoes}${salt.hex()}${chave.hex()}"
 
        return string_registro_banco

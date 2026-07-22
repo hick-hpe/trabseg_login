@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from fastapi import status
+from argon2 import PasswordHasher
 import services
 import random
 
@@ -33,17 +34,40 @@ def login(
     global usuario_logado
     
     usuario_logado = None
-    salt = None
     
     if banco_dados_senhas[usuario]:
-        salt_hex = banco_dados_senhas[usuario].split("$")[2]
-        salt = bytes.fromhex(salt_hex)
-
-    string_registro_banco = services.cript_senha(senha, salt)
+        alg = banco_dados_senhas[usuario][1:].split("$")[0]
+        
+        if alg == "pbkdf2":
+            print("buscando pbdkf2 antigo...")
+            
+            salt_hex = banco_dados_senhas[usuario].split("$")[4]
+            alg = banco_dados_senhas[usuario][1:].split("$")[0]
+            salt = bytes.fromhex(salt_hex)
+            string_registro_banco = services.cript_senha(senha, salt)
+            print('alg: ', alg)
+            print('banco: ', banco_dados_senhas[usuario])
+            print('agora: ', string_registro_banco)
+            
+            if banco_dados_senhas[usuario] == string_registro_banco:
+                ph = PasswordHasher()
+                string_registro_banco = ph.hash(senha, salt=salt)
+                banco_dados_senhas[usuario] = string_registro_banco
+                print("nova senha argon2: ", string_registro_banco)
+            
+        else:
+            print("buscando argon2 antigo...")
+            ph = PasswordHasher()
+            string_registro_banco = ph.hash(senha, salt=bytes(16))            
+                        
 
     if not banco_dados_senhas[usuario]:
+        string_registro_banco = services.cript_senha(senha)
         banco_dados_senhas[usuario] = string_registro_banco
     
+    
+    print('---- tudo ok ----')
+    print(banco_dados_senhas)
     if banco_dados_senhas[usuario] == string_registro_banco:
         return RedirectResponse(url="/home", status_code=status.HTTP_303_SEE_OTHER)
     
@@ -51,7 +75,7 @@ def login(
         return templates.TemplateResponse(
                 request=request,
                 name="index.html",
-                context={"erro_login":"Erro"}
+                context={"erro_login":"Senha incorreta"}
             )
 
 

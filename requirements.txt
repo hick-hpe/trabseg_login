@@ -2,3 +2,4 @@ fastapi
 uvicorn
 python-multipart
 jinja2
+argon2-cffi
